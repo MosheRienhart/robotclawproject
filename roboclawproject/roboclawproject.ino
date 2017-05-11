@@ -114,6 +114,8 @@ uint32_t lastBlockTime = 0;
 //---------------------------------------
 void loop()
 { 
+  Serial.println("Pan position");
+  Serial.println(panLoop.m_pos);
   uint16_t blocks;
   blocks = pixy.getBlocks();
   
