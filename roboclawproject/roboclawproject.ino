@@ -88,8 +88,8 @@ void ServoLoop::update(int32_t error)
 
 Pixy pixy;  // Declare the camera object
 
-ServoLoop panLoop(200, 200);  // Servo loop for pan
-ServoLoop tiltLoop(150, 200); // Servo loop for tilt
+ServoLoop panLoop(350, 700);  // Servo loop for pan
+ServoLoop tiltLoop(500, 700); // Servo loop for tilt
 
 //ZumoMotors motors;  // declare the motors on the zumo
 
