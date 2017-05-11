@@ -5,7 +5,7 @@
 #include <NewPing.h>
 
 //#include <ZumoMotors.h>
-
+#define FORWARD_THRESHOLD 100
 #define X_CENTER    160L
 #define Y_CENTER    100L
 #define RCS_MIN_POS     0L
@@ -216,6 +216,8 @@ void FollowBlock(int trackedBlock)
   distanceFWD = sonar.ping_cm();
   Serial.print("distance Follow = ");
   Serial.println(distanceFWD);
+  
+  /*
   if (distanceFWD > 10)
   {
     roboclaw.ForwardBackwardM1(address, leftSpeed);
@@ -226,6 +228,34 @@ void FollowBlock(int trackedBlock)
   {
     roboclaw.ForwardBackwardM1(address, leftSpeed);
     roboclaw.ForwardBackwardM2(address, rightSpeed);
+  }
+
+  */
+
+  if (true) //(distanceFWD > 10)
+  {
+    if (panLoop.m_pos < 512 - FORWARD_THRESHOLD) {
+        roboclaw.ForwardM1(address,map(panLoop.m_pos, 0, 512 - FORWARD_THRESHOLD, 32, 10));
+        roboclaw.BackwardM2(address,map(panLoop.m_pos, 0, 512 - FORWARD_THRESHOLD, 32, 10));
+    }
+    else if (panLoop.m_pos > 512 + FORWARD_THRESHOLD){
+        roboclaw.BackwardM1(address,map(panLoop.m_pos, 512 + FORWARD_THRESHOLD, 1024, 10, 32));
+        roboclaw.ForwardM2(address,map(panLoop.m_pos, 512 + FORWARD_THRESHOLD, 1024, 10, 32));
+    }
+    else {
+      if (panLoop.m_pos > 512) {
+        roboclaw.BackwardM1(address, map(panLoop.m_pos, 512,512 + FORWARD_THRESHOLD, 32, 5));
+        roboclaw.BackwardM2(address, map(panLoop.m_pos, 512,512 + FORWARD_THRESHOLD, 32, 5));
+      }
+      if (panLoop.m_pos < 512) {
+        roboclaw.BackwardM1(address, map(panLoop.m_pos, 512 - FORWARD_THRESHOLD, 512, 5, 32));
+        roboclaw.BackwardM2(address, map(panLoop.m_pos, 512 - FORWARD_THRESHOLD, 512, 5, 32));
+      }
+    }
+  }
+  else {
+        roboclaw.ForwardM1(address, 0);
+        roboclaw.ForwardM2(address, 0);
   }
 }
 
